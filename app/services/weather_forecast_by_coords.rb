@@ -1,8 +1,10 @@
-class GetWeatherForecast
+class WeatherForecastByCoords
   include HTTParty
   prepend SimpleCommand
 
   base_uri "api.openweathermap.org"
+
+  attr_reader :latitude, :longitude
 
   def initialize(latitude:, longitude:)
     @latitude = latitude
@@ -10,12 +12,14 @@ class GetWeatherForecast
   end
 
   def call
-    self.class.get("/data/2.5/onecall", options)
+    data.parsed_response
+  end
+
+  def data
+    @data ||= self.class.get("/data/2.5/onecall", options)
   end
 
   private
-
-  attr_reader :latitude, :longitude
 
   def options
     {
