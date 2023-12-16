@@ -9,16 +9,12 @@ class GetPlaces
   end
 
   def call
-    cities
+    self.class.get("/api/v2/places", options)
   end
 
   private
 
   attr_reader :city_name
-
-  def cities
-    self.class.get("/api/v2/places", options)
-  end
 
   def options
     { query: { q: city_name } }
