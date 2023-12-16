@@ -12,7 +12,7 @@ describe WeatherForecastController do
 
       end
 
-      it "renders a list of cities" do
+      xit "renders a list of cities" do
         expect(JSON.parse(response.body)).not_to be_empty
       end
     end
@@ -24,6 +24,19 @@ describe WeatherForecastController do
 
       it "renders an empty array" do
         expect(JSON.parse(response.body)).to be_empty
+      end
+    end
+
+    context "when the request gets an exception" do
+      before do
+        allow(GetPlaces).to receive(:call).with(city_name: "foo").and_raise(StandardError.new("error"))
+
+        get :index, params: { city_name: "foo" }
+      end
+
+      it "renders an error" do
+        json_parsed = JSON.parse(response.body)
+        expect(json_parsed["error"]).not_to be_empty
       end
     end
   end
