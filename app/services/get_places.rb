@@ -11,6 +11,8 @@ class GetPlaces
   end
 
   def call
+    return [] unless city_name.present?
+
     data.parsed_response
   end
 

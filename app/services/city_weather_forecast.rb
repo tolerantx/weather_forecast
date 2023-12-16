@@ -8,6 +8,8 @@ class CityWeatherForecast
   end
 
   def call
+    return [] unless city_name.present?
+
     weather_forecast
   rescue => e
     Rails.logger.info(e.message)
