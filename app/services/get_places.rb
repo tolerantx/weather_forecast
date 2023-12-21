@@ -4,16 +4,17 @@ class GetPlaces
 
   base_uri "search.reservamos.mx"
 
-  attr_reader :city_name
+  attr_reader :city_name, :query
 
-  def initialize(city_name:)
+  def initialize(city_name:, query: :q)
     @city_name = city_name
+    @query = query
   end
 
   def call
     return [] unless city_name.present?
 
-    data.parsed_response
+    data_filtered
   end
 
   private
@@ -23,6 +24,12 @@ class GetPlaces
   end
 
   def options
-    { query: { q: city_name } }
+    { query: { query.to_sym => city_name } }
+  end
+
+  def data_filtered
+    data.parsed_response.select do |place|
+      place["result_type"] == "city"
+    end
   end
 end

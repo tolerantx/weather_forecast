@@ -1,25 +1,20 @@
-class CityWeatherForecast
+class CityWeatherForecastFrom
   prepend SimpleCommand
 
-  attr_reader :error, :city_name
+  attr_reader :city_name
 
   def initialize(city_name:)
     @city_name = city_name
   end
 
   def call
-    return [] unless city_name.present?
-
-    weather_forecast
-  rescue => e
-    Rails.logger.info(e.message)
-    @error = { error: "Something went wrong:" }
+    weather_forecast.sort_by do |row|
+      row[:average]
+    end.last
   end
 
-  private
-
   def cities
-    @cities ||= GetPlaces.call(city_name: city_name).result[0..4]
+    @cities ||= GetPlaces.call(city_name: city_name, query: :from).result[0..4]
   end
 
   def weather_forecast
@@ -32,4 +27,4 @@ class CityWeatherForecast
       }.merge(weather_forecast_decorator.from_records)
     end
   end
-end
+ end

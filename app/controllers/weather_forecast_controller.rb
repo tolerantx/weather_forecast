@@ -6,6 +6,10 @@ class WeatherForecastController < ApplicationController
     render json: @service.result, status: status
   end
 
+  def places
+    render json: CityWeatherForecastFrom.call(city_name: params[:from]).result, status: :ok
+  end
+
   private
 
   def get_service

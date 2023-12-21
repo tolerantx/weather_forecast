@@ -10,8 +10,17 @@ class WeatherForecastDecorator < SimpleDelegator
     end
   end
 
-  def time
-    { timestamp:  }
+  def from_records
+    {
+      average: average
+    }
+  end
+
+  def average
+    records = Array(weather_forecast.data["daily"]).drop(1)
+    records.map do |row|
+      row.dig("temp", "max")
+    end.sum / records.size.to_i
   end
 
   def weather_forecast
